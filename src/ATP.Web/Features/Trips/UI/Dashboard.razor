@@ -9,7 +9,7 @@
 <div class="dashboard">
     <header class="dashboard-header">
         <h1>Minhas Viagens</h1>
-        <button class="btn btn-primary" @onclick="NavigateToNewTrip">Nova Viagem</button>
+        <button class="bg-[var(--color-primary)] text-[var(--color-text-on-primary)] px-4 py-2 rounded-[var(--border-radius-sm)] hover:bg-[var(--color-primary-hover)] transition-colors font-bold" @onclick="NavigateToNewTrip">Nova Viagem</button>
     </header>
 
     @if (_loading)

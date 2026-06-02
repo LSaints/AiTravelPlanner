@@ -5,6 +5,12 @@
     <File Path="docs\TASKS.md" />
   </Folder>
   <Folder Name="/specs/" />
+  <Folder Name="/specs/dark-cartoon-theme/">
+    <File Path="specs\dark-cartoon-theme\PLAN.md" />
+    <File Path="specs\dark-cartoon-theme\SPEC.md" />
+    <File Path="specs\dark-cartoon-theme\TASKS.md" />
+  </Folder>
+  <Folder Name="/specs/tailwind-css-integration/" />
   <Folder Name="/src/">
     <Project Path="src/ATP.Web/ATP.Web.csproj" />
   </Folder>

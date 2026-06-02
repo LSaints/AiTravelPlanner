@@ -31,7 +31,7 @@
                 </div>
             </div>
             <div class="header-actions">
-                <button class="btn btn-outline-secondary" @onclick="EditTrip">Editar</button>
+                <button class="border-[var(--color-border)] text-[var(--color-text-primary)] px-4 py-2 rounded-[var(--border-radius-sm)] bg-[var(--color-bg-surface)] hover:bg-[var(--color-primary)] hover:text-[var(--color-text-on-primary)] transition-colors font-bold" @onclick="EditTrip">Editar</button>
             </div>
         </header>
 
@@ -51,7 +51,7 @@
         <section class="travel-plans">
             <div class="section-header">
                 <h2>Planos de Viagem</h2>
-                <button class="btn btn-primary" @onclick="GeneratePlan" disabled="@_generating">
+                <button class="bg-[var(--color-primary)] text-[var(--color-text-on-primary)] px-4 py-2 rounded-[var(--border-radius-sm)] hover:bg-[var(--color-primary-hover)] transition-colors disabled:opacity-50 font-bold" @onclick="GeneratePlan" disabled="@_generating">
                     @(_generating ? "Gerando..." : "Gerar Plano")
                 </button>
             </div>

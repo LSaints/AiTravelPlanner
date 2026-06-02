@@ -24,25 +24,25 @@
 
             <div class="form-group">
                 <label for="destination">Destino</label>
-                <InputText id="destination" class="form-control" @bind-Value="_trip.Destination" />
+                <InputText id="destination" class="w-full px-3 py-2 border-[var(--color-border)] rounded-[var(--border-radius-sm)] bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]" @bind-Value="_trip.Destination" />
                 <ValidationMessage For="() => _trip.Destination" />
             </div>
 
             <div class="form-group">
                 <label for="country">País</label>
-                <InputText id="country" class="form-control" @bind-Value="_trip.Country" />
+                <InputText id="country" class="w-full px-3 py-2 border-[var(--color-border)] rounded-[var(--border-radius-sm)] bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]" @bind-Value="_trip.Country" />
                 <ValidationMessage For="() => _trip.Country" />
             </div>
 
             <div class="form-row">
                 <div class="form-group">
                     <label for="startDate">Data de Início</label>
-                    <InputDate id="startDate" class="form-control" @bind-Value="_trip.StartDate" />
+                    <InputDate id="startDate" class="w-full px-3 py-2 border-[var(--color-border)] rounded-[var(--border-radius-sm)] bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]" @bind-Value="_trip.StartDate" />
                     <ValidationMessage For="() => _trip.StartDate" />
                 </div>
                 <div class="form-group">
                     <label for="endDate">Data de Término</label>
-                    <InputDate id="endDate" class="form-control" @bind-Value="_trip.EndDate" />
+                    <InputDate id="endDate" class="w-full px-3 py-2 border-[var(--color-border)] rounded-[var(--border-radius-sm)] bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]" @bind-Value="_trip.EndDate" />
                     <ValidationMessage For="() => _trip.EndDate" />
                 </div>
             </div>
@@ -50,33 +50,33 @@
             <div class="form-row">
                 <div class="form-group">
                     <label for="numberOfPeople">Pessoas</label>
-                    <InputNumber id="numberOfPeople" class="form-control" @bind-Value="_trip.NumberOfPeople" />
+                    <InputNumber id="numberOfPeople" class="w-full px-3 py-2 border-[var(--color-border)] rounded-[var(--border-radius-sm)] bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]" @bind-Value="_trip.NumberOfPeople" />
                     <ValidationMessage For="() => _trip.NumberOfPeople" />
                 </div>
                 <div class="form-group">
                     <label for="budget">Orçamento</label>
-                    <InputNumber id="budget" class="form-control" @bind-Value="_trip.Budget" />
+                    <InputNumber id="budget" class="w-full px-3 py-2 border-[var(--color-border)] rounded-[var(--border-radius-sm)] bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]" @bind-Value="_trip.Budget" />
                     <ValidationMessage For="() => _trip.Budget" />
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="objectives">O que pretende fazer</label>
-                <InputTextArea id="objectives" class="form-control" @bind-Value="_trip.Objectives" />
+                <InputTextArea id="objectives" class="w-full px-3 py-2 border-[var(--color-border)] rounded-[var(--border-radius-sm)] bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]" @bind-Value="_trip.Objectives" />
                 <ValidationMessage For="() => _trip.Objectives" />
             </div>
 
             <div class="form-group">
                 <label for="additionalNotes">Observações adicionais</label>
-                <InputTextArea id="additionalNotes" class="form-control" @bind-Value="_trip.AdditionalNotes" />
+                <InputTextArea id="additionalNotes" class="w-full px-3 py-2 border-[var(--color-border)] rounded-[var(--border-radius-sm)] bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]" @bind-Value="_trip.AdditionalNotes" />
                 <ValidationMessage For="() => _trip.AdditionalNotes" />
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="btn btn-primary" disabled="@_saving">
+                <button type="submit" class="bg-[var(--color-primary)] text-[var(--color-text-on-primary)] px-4 py-2 rounded-[var(--border-radius-sm)] hover:bg-[var(--color-primary-hover)] transition-colors disabled:opacity-50 font-bold" disabled="@_saving">
                     @(_saving ? "Salvando..." : "Salvar Alterações")
                 </button>
-                <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancelar</button>
+                <button type="button" class="bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] px-4 py-2 rounded-[var(--border-radius-sm)] border-[var(--border-width-cartoon)] border-[var(--color-border)] hover:bg-[var(--color-primary)] hover:text-[var(--color-text-on-primary)] transition-colors" @onclick="Cancel">Cancelar</button>
             </div>
         </EditForm>
     }
