@@ -1,0 +1,88 @@
+@page "/trips/{TripId:guid}/plans/{PlanId:guid}"
+@using ATP.Web.Features.TravelPlans.Domain
+@using ATP.Web.Features.TravelPlans.Application
+@inject ITravelPlanRepository TravelPlanRepository
+@inject NavigationManager Navigation
+
+<PageTitle>Plano de Viagem - AI Travel Planner</PageTitle>
+
+<div class="plan-view">
+    @if (_loading)
+    {
+        <div class="loading">Carregando...</div>
+    }
+    else if (_plan is null)
+    {
+        <div class="empty-state">Plano não encontrado.</div>
+    }
+    else
+    {
+        <header class="plan-header">
+            <div>
+                <h1>Plano de Viagem</h1>
+                <div class="plan-meta">
+                    <span class="status-badge status-@_plan.Status.ToString().ToLower()">
+                        @(_plan.Status switch
+                        {
+                            PlanStatus.Pending => "Pendente",
+                            PlanStatus.Processing => "Processando",
+                            PlanStatus.Completed => "Concluído",
+                            PlanStatus.Failed => "Falhou",
+                            _ => _plan.Status.ToString()
+                        })
+                    </span>
+                    <span>Gerado em: @_plan.GeneratedAt.ToString("dd/MM/yyyy HH:mm")</span>
+                    @if (!string.IsNullOrEmpty(_plan.Model))
+                    {
+                        <span>Modelo: @_plan.Model</span>
+                    }
+                </div>
+            </div>
+            <button class="btn btn-outline-secondary" @onclick="GoBack">Voltar</button>
+        </header>
+
+        @switch (_plan.Status)
+        {
+            case PlanStatus.Processing:
+                <div class="generating">Gerando plano com IA...</div>
+                break;
+            case PlanStatus.Failed:
+                <div class="failed-message">
+                    Não foi possível gerar o plano de viagem. Tente novamente em alguns instantes.
+                </div>
+                break;
+            case PlanStatus.Completed:
+                <div class="plan-content">
+                    @((MarkupString)_renderedContent)
+                </div>
+                break;
+        }
+    }
+</div>
+
+@code {
+    [Parameter]
+    public Guid TripId { get; set; }
+
+    [Parameter]
+    public Guid PlanId { get; set; }
+
+    private TravelPlan? _plan;
+    private string _renderedContent = string.Empty;
+    private bool _loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _plan = await TravelPlanRepository.GetByIdAsync(PlanId);
+        if (_plan is { Status: PlanStatus.Completed })
+        {
+            _renderedContent = Markdig.Markdown.ToHtml(_plan.GeneratedContent);
+        }
+        _loading = false;
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo($"/trips/{TripId}");
+    }
+}

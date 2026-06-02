@@ -1,0 +1,128 @@
+@page "/trips/new"
+@using ATP.Web.Features.Trips.Application
+@inject CreateTrip CreateTripUseCase
+@inject NavigationManager Navigation
+
+<PageTitle>Nova Viagem - AI Travel Planner</PageTitle>
+
+<div class="new-trip">
+    <h1>Nova Viagem</h1>
+
+    <EditForm Model="@_trip" OnValidSubmit="@HandleSubmit" FormName="newTrip">
+        <DataAnnotationsValidator />
+
+        <div class="form-group">
+            <label for="destination">Destino</label>
+            <InputText id="destination" class="form-control" @bind-Value="_trip.Destination" />
+            <ValidationMessage For="() => _trip.Destination" />
+        </div>
+
+        <div class="form-group">
+            <label for="country">País</label>
+            <InputText id="country" class="form-control" @bind-Value="_trip.Country" />
+            <ValidationMessage For="() => _trip.Country" />
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="startDate">Data de Início</label>
+                <InputDate id="startDate" class="form-control" @bind-Value="_trip.StartDate" />
+                <ValidationMessage For="() => _trip.StartDate" />
+            </div>
+            <div class="form-group">
+                <label for="endDate">Data de Término</label>
+                <InputDate id="endDate" class="form-control" @bind-Value="_trip.EndDate" />
+                <ValidationMessage For="() => _trip.EndDate" />
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="numberOfPeople">Pessoas</label>
+                <InputNumber id="numberOfPeople" class="form-control" @bind-Value="_trip.NumberOfPeople" />
+                <ValidationMessage For="() => _trip.NumberOfPeople" />
+            </div>
+            <div class="form-group">
+                <label for="budget">Orçamento</label>
+                <InputNumber id="budget" class="form-control" @bind-Value="_trip.Budget" />
+                <ValidationMessage For="() => _trip.Budget" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="objectives">O que pretende fazer</label>
+            <InputTextArea id="objectives" class="form-control" @bind-Value="_trip.Objectives" />
+            <ValidationMessage For="() => _trip.Objectives" />
+        </div>
+
+        <div class="form-group">
+            <label for="additionalNotes">Observações adicionais</label>
+            <InputTextArea id="additionalNotes" class="form-control" @bind-Value="_trip.AdditionalNotes" />
+            <ValidationMessage For="() => _trip.AdditionalNotes" />
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary" disabled="@_saving">
+                @(_saving ? "Salvando..." : "Salvar Viagem")
+            </button>
+            <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancelar</button>
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    private TripFormModel _trip = new();
+    private bool _saving;
+
+    private async Task HandleSubmit()
+    {
+        _saving = true;
+
+        var request = new CreateTripRequest(
+            _trip.Destination,
+            _trip.Country,
+            _trip.StartDate,
+            _trip.EndDate,
+            _trip.NumberOfPeople,
+            _trip.Budget,
+            _trip.Objectives,
+            _trip.AdditionalNotes
+        );
+
+        var trip = await CreateTripUseCase.ExecuteAsync(request);
+        _saving = false;
+
+        Navigation.NavigateTo($"/trips/{trip.Id}");
+    }
+
+    private void Cancel()
+    {
+        Navigation.NavigateTo("/");
+    }
+
+    private class TripFormModel
+    {
+        [System.ComponentModel.DataAnnotations.Required(ErrorMessage = "Destino é obrigatório")]
+        public string Destination { get; set; } = string.Empty;
+
+        [System.ComponentModel.DataAnnotations.Required(ErrorMessage = "País é obrigatório")]
+        public string Country { get; set; } = string.Empty;
+
+        [System.ComponentModel.DataAnnotations.Required(ErrorMessage = "Data de início é obrigatória")]
+        public DateOnly StartDate { get; set; } = DateOnly.FromDateTime(DateTime.Now);
+
+        [System.ComponentModel.DataAnnotations.Required(ErrorMessage = "Data de término é obrigatória")]
+        public DateOnly EndDate { get; set; } = DateOnly.FromDateTime(DateTime.Now);
+
+        [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue, ErrorMessage = "Deve haver pelo menos 1 pessoa")]
+        public int NumberOfPeople { get; set; } = 1;
+
+        [System.ComponentModel.DataAnnotations.Range(0.01, double.MaxValue, ErrorMessage = "Orçamento deve ser maior que zero")]
+        public decimal Budget { get; set; }
+
+        [System.ComponentModel.DataAnnotations.Required(ErrorMessage = "Objetivo é obrigatório")]
+        public string Objectives { get; set; } = string.Empty;
+
+        public string AdditionalNotes { get; set; } = string.Empty;
+    }
+}

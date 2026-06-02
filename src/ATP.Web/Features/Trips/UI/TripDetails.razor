@@ -1,0 +1,142 @@
+@page "/trips/{Id:guid}"
+@using ATP.Web.Features.Trips.Domain
+@using ATP.Web.Features.Trips.Application
+@using ATP.Web.Features.TravelPlans.Application
+@using ATP.Web.Features.TravelPlans.Domain
+@inject GetTrip GetTripUseCase
+@inject ITravelPlanRepository TravelPlanRepository
+@inject GenerateTravelPlan GenerateTravelPlanUseCase
+@inject NavigationManager Navigation
+
+<PageTitle>Detalhes da Viagem - AI Travel Planner</PageTitle>
+
+<div class="trip-details">
+    @if (_loading)
+    {
+        <div class="loading">Carregando...</div>
+    }
+    else if (_trip is null)
+    {
+        <div class="empty-state">Viagem não encontrada.</div>
+    }
+    else
+    {
+        <header class="details-header">
+            <div>
+                <h1>@_trip.Destination, @_trip.Country</h1>
+                <div class="trip-meta">
+                    <span>@_trip.StartDate.ToString("dd/MM/yyyy") - @_trip.EndDate.ToString("dd/MM/yyyy")</span>
+                    <span>@_trip.NumberOfPeople pessoa@(_trip.NumberOfPeople > 1 ? "s" : "")</span>
+                    <span>Orçamento: @_trip.Budget.ToString("C")</span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-outline-secondary" @onclick="EditTrip">Editar</button>
+            </div>
+        </header>
+
+        <section class="trip-objectives">
+            <h2>Objetivos</h2>
+            <p>@_trip.Objectives</p>
+        </section>
+
+        @if (!string.IsNullOrWhiteSpace(_trip.AdditionalNotes))
+        {
+            <section class="trip-notes">
+                <h2>Observações</h2>
+                <p>@_trip.AdditionalNotes</p>
+            </section>
+        }
+
+        <section class="travel-plans">
+            <div class="section-header">
+                <h2>Planos de Viagem</h2>
+                <button class="btn btn-primary" @onclick="GeneratePlan" disabled="@_generating">
+                    @(_generating ? "Gerando..." : "Gerar Plano")
+                </button>
+            </div>
+
+            @if (_generating)
+            {
+                <div class="generating">Gerando plano com IA...</div>
+            }
+            else if (_plans is { Count: 0 })
+            {
+                <div class="empty-state">Nenhum plano gerado ainda.</div>
+            }
+            else
+            {
+                <div class="plans-list">
+                    @foreach (var plan in _plans!)
+                    {
+                        <div class="plan-card @(plan.Status == PlanStatus.Failed ? "failed" : "")"
+                             @onclick="() => ViewPlan(plan.Id)">
+                            <div class="plan-status">
+                                <span class="status-badge status-@plan.Status.ToString().ToLower()">
+                                    @(plan.Status switch
+                                    {
+                                        PlanStatus.Pending => "Pendente",
+                                        PlanStatus.Processing => "Processando",
+                                        PlanStatus.Completed => "Concluído",
+                                        PlanStatus.Failed => "Falhou",
+                                        _ => plan.Status.ToString()
+                                    })
+                                </span>
+                            </div>
+                            <div class="plan-info">
+                                <span>@plan.GeneratedAt.ToString("dd/MM/yyyy HH:mm")</span>
+                                @if (!string.IsNullOrEmpty(plan.Model))
+                                {
+                                    <span>@plan.Model</span>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </section>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+
+    private Trip? _trip;
+    private List<TravelPlan>? _plans;
+    private bool _loading = true;
+    private bool _generating;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _trip = await GetTripUseCase.ExecuteAsync(Id);
+        if (_trip is not null)
+        {
+            _plans = await TravelPlanRepository.GetByTripAsync(Id);
+        }
+        _loading = false;
+    }
+
+    private void EditTrip()
+    {
+        Navigation.NavigateTo($"/trips/{Id}/edit");
+    }
+
+    private void ViewPlan(Guid planId)
+    {
+        Navigation.NavigateTo($"/trips/{Id}/plans/{planId}");
+    }
+
+    private async Task GeneratePlan()
+    {
+        _generating = true;
+        var plan = await GenerateTravelPlanUseCase.ExecuteAsync(Id);
+        _generating = false;
+
+        if (plan is not null)
+        {
+            _plans = await TravelPlanRepository.GetByTripAsync(Id);
+            StateHasChanged();
+        }
+    }
+}

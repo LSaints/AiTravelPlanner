@@ -115,7 +115,6 @@ O MVP validará se usuários consideram valioso receber um plano completo gerado
 
 ## In Scope
 
-- Cadastro e login de usuários.
 - Criação de viagens.
 - Formulário de planejamento.
 - Geração de roteiro por IA.
@@ -156,7 +155,7 @@ O usuário deve informar:
 - Quantidade de pessoas
 - Orçamento total
 - Objetivo da viagem
-- Preferências de atividades
+- Observações adicionais
 
 ## FR-003
 
@@ -232,7 +231,7 @@ O usuário deve poder regenerar o plano utilizando novas informações.
 
 ## Flow 2 - Consultar Planejamento
 
-1. Usuário acessa sua conta.
+1. Usuário acessa o sistema.
 2. Usuário visualiza lista de viagens.
 3. Usuário seleciona uma viagem.
 4. Sistema apresenta o plano completo.

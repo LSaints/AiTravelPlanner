@@ -1,0 +1,63 @@
+@page "/"
+@using ATP.Web.Features.Trips.Application
+@using ATP.Web.Features.Trips.Domain
+@inject ITripRepository TripRepository
+@inject NavigationManager Navigation
+
+<PageTitle>Dashboard - AI Travel Planner</PageTitle>
+
+<div class="dashboard">
+    <header class="dashboard-header">
+        <h1>Minhas Viagens</h1>
+        <button class="btn btn-primary" @onclick="NavigateToNewTrip">Nova Viagem</button>
+    </header>
+
+    @if (_loading)
+    {
+        <div class="loading">Carregando...</div>
+    }
+    else if (_trips is { Count: 0 })
+    {
+        <div class="empty-state">
+            <p>Nenhuma viagem encontrada.</p>
+            <p>Crie sua primeira viagem para começar.</p>
+        </div>
+    }
+    else
+    {
+        <div class="trip-list">
+            @foreach (var trip in _trips!)
+            {
+                <div class="trip-card" @onclick="() => NavigateToTrip(trip.Id)">
+                    <h3>@trip.Destination, @trip.Country</h3>
+                    <div class="trip-info">
+                        <span>@trip.StartDate.ToString("dd/MM/yyyy") - @trip.EndDate.ToString("dd/MM/yyyy")</span>
+                        <span>@trip.NumberOfPeople pessoa@(trip.NumberOfPeople > 1 ? "s" : "")</span>
+                    </div>
+                    <div class="trip-budget">Orçamento: @trip.Budget.ToString("C")</div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private List<Trip>? _trips;
+    private bool _loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _trips = await TripRepository.GetAllAsync();
+        _loading = false;
+    }
+
+    private void NavigateToNewTrip()
+    {
+        Navigation.NavigateTo("/trips/new");
+    }
+
+    private void NavigateToTrip(Guid id)
+    {
+        Navigation.NavigateTo($"/trips/{id}");
+    }
+}

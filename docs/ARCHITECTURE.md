@@ -318,6 +318,8 @@ TravelPlan
 
     string GeneratedContent;
 
+    string PromptVersion;
+
     string AiProvider;
 
     string Model;
@@ -372,6 +374,7 @@ Id
 TripId
 Prompt
 GeneratedContent
+PromptVersion
 AiProvider
 Model
 TokensUsed
