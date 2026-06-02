@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/docs/">
+    <File Path="docs\ARCHITECTURE.md" />
+    <File Path="docs\PRD.md" />
+    <File Path="docs\TASKS.md" />
+  </Folder>
+  <Folder Name="/specs/" />
+  <Folder Name="/src/">
+    <Project Path="src/ATP.Web/ATP.Web.csproj" />
+  </Folder>
+  <Folder Name="/tests/" />
+</Solution>
