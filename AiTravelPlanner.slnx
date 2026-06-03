@@ -5,6 +5,11 @@
     <File Path="docs\TASKS.md" />
   </Folder>
   <Folder Name="/specs/" />
+  <Folder Name="/specs/ci-pipeline/">
+    <File Path="specs\ci-pipeline\PLAN.md" />
+    <File Path="specs\ci-pipeline\SPEC.md" />
+    <File Path="specs\ci-pipeline\TASKS.md" />
+  </Folder>
   <Folder Name="/specs/dark-cartoon-theme/">
     <File Path="specs\dark-cartoon-theme\PLAN.md" />
     <File Path="specs\dark-cartoon-theme\SPEC.md" />
