@@ -8,34 +8,88 @@
 
 <div class="dashboard">
     <header class="dashboard-header">
-        <h1>Minhas Viagens</h1>
-        <button class="bg-[var(--color-primary)] text-[var(--color-text-on-primary)] px-4 py-2 rounded-[var(--border-radius-sm)] hover:bg-[var(--color-primary-hover)] transition-colors font-bold" @onclick="NavigateToNewTrip">Nova Viagem</button>
+        <div class="dashboard-title">
+            <h1>Minhas Viagens</h1>
+            @if (_trips is { Count: > 0 })
+            {
+                <span class="trip-count">@_trips.Count viagem@(_trips.Count > 1 ? "ns" : "")</span>
+            }
+        </div>
+        <button class="new-trip-btn" @onclick="NavigateToNewTrip">
+            <span class="btn-icon">✈</span>
+            Nova Viagem
+        </button>
     </header>
 
     @if (_loading)
     {
-        <div class="loading">Carregando...</div>
+        <div class="loading">
+            <div class="loader-plane">✈</div>
+            <span>Carregando suas viagens...</span>
+        </div>
     }
     else if (_trips is { Count: 0 })
     {
         <div class="empty-state">
-            <p>Nenhuma viagem encontrada.</p>
-            <p>Crie sua primeira viagem para começar.</p>
+            <div class="empty-illustration">
+                <svg class="empty-map" viewBox="0 0 240 120" fill="none">
+                    <path d="M30 60 Q80 20 120 60 T210 60"
+                          stroke="var(--color-border)" stroke-width="2.5"
+                          stroke-dasharray="8 6" stroke-linecap="round"/>
+                    <circle cx="30" cy="60" r="8" fill="var(--color-primary)"
+                            stroke="var(--color-primary-light)" stroke-width="2.5"/>
+                    <circle cx="120" cy="60" r="5" fill="var(--color-bg-elevated)"
+                            stroke="var(--color-border)" stroke-width="2"/>
+                    <circle cx="210" cy="60" r="8" fill="var(--color-primary)"
+                            stroke="var(--color-primary-light)" stroke-width="2.5"/>
+                </svg>
+            </div>
+            <p class="empty-title">Nenhuma viagem ainda</p>
+            <p class="empty-subtitle">Sua próxima aventura espera por você!</p>
+            <button class="new-trip-btn empty-cta" @onclick="NavigateToNewTrip">
+                <span class="btn-icon">✈</span>
+                Criar Primeira Viagem
+            </button>
         </div>
     }
     else
     {
         <div class="trip-list">
+            @{
+                var cardIdx = 0;
+            }
             @foreach (var trip in _trips!)
             {
-                <div class="trip-card" @onclick="() => NavigateToTrip(trip.Id)">
-                    <h3>@trip.Destination, @trip.Country</h3>
-                    <div class="trip-info">
-                        <span>@trip.StartDate.ToString("dd/MM/yyyy") - @trip.EndDate.ToString("dd/MM/yyyy")</span>
-                        <span>@trip.NumberOfPeople pessoa@(trip.NumberOfPeople > 1 ? "s" : "")</span>
+                var duration = trip.EndDate.DayNumber - trip.StartDate.DayNumber;
+                var initial = string.IsNullOrEmpty(trip.Destination) ? '?' : trip.Destination[0];
+
+                <div class="trip-card" style="--i: @cardIdx" @onclick="() => NavigateToTrip(trip.Id)">
+                    <div class="card-tag">
+                        <span class="card-initial">@initial</span>
                     </div>
-                    <div class="trip-budget">Orçamento: @trip.Budget.ToString("C")</div>
+                    <div class="card-body">
+                        <div class="card-top">
+                            <h3>@trip.Destination, @trip.Country</h3>
+                            <span class="card-duration">@duration @(duration == 1 ? "dia" : "dias")</span>
+                        </div>
+                        <div class="card-meta">
+                            <span class="card-dates">
+                                <span class="meta-icon">📅</span>
+                                @trip.StartDate.ToString("dd MMM") - @trip.EndDate.ToString("dd MMM yyyy")
+                            </span>
+                            <span class="card-people">
+                                <span class="meta-icon">👤</span>
+                                @trip.NumberOfPeople @(trip.NumberOfPeople > 1 ? "pessoas" : "pessoa")
+                            </span>
+                        </div>
+                        <div class="card-budget">
+                            <span class="budget-label">Orçamento</span>
+                            <span class="budget-value">@trip.Budget.ToString("C")</span>
+                        </div>
+                    </div>
                 </div>
+
+                cardIdx++;
             }
         </div>
     }

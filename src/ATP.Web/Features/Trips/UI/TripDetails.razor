@@ -13,84 +13,130 @@
 <div class="trip-details">
     @if (_loading)
     {
-        <div class="loading">Carregando...</div>
+        <div class="loading">
+            <div class="loader-plane">✈</div>
+            <span>Carregando detalhes da viagem...</span>
+        </div>
     }
     else if (_trip is null)
     {
-        <div class="empty-state">Viagem não encontrada.</div>
+        <div class="empty-state">
+            <div class="empty-illustration">
+                <svg class="empty-map" viewBox="0 0 200 100" fill="none">
+                    <circle cx="100" cy="50" r="35"
+                            stroke="var(--color-border)" stroke-width="2.5"
+                            stroke-dasharray="8 6" stroke-linecap="round" fill="none"/>
+                    <circle cx="100" cy="50" r="4" fill="var(--color-primary)"
+                            stroke="var(--color-primary-light)" stroke-width="2"/>
+                    <line x1="72" y1="28" x2="128" y2="72"
+                          stroke="var(--color-border)" stroke-width="2.5"
+                          stroke-dasharray="6 4" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <p class="empty-title">Viagem não encontrada</p>
+        </div>
     }
     else
     {
-        <header class="details-header">
-            <div>
+        <header class="detail-header">
+            <div class="header-tag">
+                <span class="header-initial">@(string.IsNullOrEmpty(_trip.Destination) ? '?' : _trip.Destination[0])</span>
+            </div>
+            <div class="header-body">
                 <h1>@_trip.Destination, @_trip.Country</h1>
                 <div class="trip-meta">
-                    <span>@_trip.StartDate.ToString("dd/MM/yyyy") - @_trip.EndDate.ToString("dd/MM/yyyy")</span>
-                    <span>@_trip.NumberOfPeople pessoa@(_trip.NumberOfPeople > 1 ? "s" : "")</span>
-                    <span>Orçamento: @_trip.Budget.ToString("C")</span>
+                    <span class="meta-item">
+                        <span class="meta-icon">📅</span>
+                        @_trip.StartDate.ToString("dd MMM") - @_trip.EndDate.ToString("dd MMM yyyy")
+                    </span>
+                    <span class="meta-item">
+                        <span class="meta-icon">👤</span>
+                        @_trip.NumberOfPeople pessoa@(_trip.NumberOfPeople > 1 ? "s" : "")
+                    </span>
+                    <span class="meta-item">
+                        <span class="meta-icon">💰</span>
+                        Orçamento: @_trip.Budget.ToString("C")
+                    </span>
                 </div>
             </div>
             <div class="header-actions">
-                <button class="border-[var(--color-border)] text-[var(--color-text-primary)] px-4 py-2 rounded-[var(--border-radius-sm)] bg-[var(--color-bg-surface)] hover:bg-[var(--color-primary)] hover:text-[var(--color-text-on-primary)] transition-colors font-bold" @onclick="EditTrip">Editar</button>
+                <button class="btn-secondary" @onclick="EditTrip">Editar</button>
             </div>
         </header>
 
-        <section class="trip-objectives">
-            <h2>Objetivos</h2>
+        <section class="content-section">
+            <h2><span class="section-icon">📌</span> Objetivos</h2>
             <p>@_trip.Objectives</p>
         </section>
 
         @if (!string.IsNullOrWhiteSpace(_trip.AdditionalNotes))
         {
-            <section class="trip-notes">
-                <h2>Observações</h2>
+            <section class="content-section">
+                <h2><span class="section-icon">📎</span> Observações</h2>
                 <p>@_trip.AdditionalNotes</p>
             </section>
         }
 
-        <section class="travel-plans">
+        <section class="plans-section">
             <div class="section-header">
-                <h2>Planos de Viagem</h2>
-                <button class="bg-[var(--color-primary)] text-[var(--color-text-on-primary)] px-4 py-2 rounded-[var(--border-radius-sm)] hover:bg-[var(--color-primary-hover)] transition-colors disabled:opacity-50 font-bold" @onclick="GeneratePlan" disabled="@_generating">
+                <h2><span class="section-icon">🗺</span> Planos de Viagem</h2>
+                <button class="btn-primary" @onclick="GeneratePlan" disabled="@_generating" style="flex-shrink:0">
                     @(_generating ? "Gerando..." : "Gerar Plano")
                 </button>
             </div>
 
             @if (_generating)
             {
-                <div class="generating">Gerando plano com IA...</div>
+                <div class="generating">
+                    <span class="generating-dot"></span>
+                    Gerando plano com IA...
+                </div>
             }
             else if (_plans is { Count: 0 })
             {
-                <div class="empty-state">Nenhum plano gerado ainda.</div>
+                <div class="plans-empty">
+                    <p>Nenhum plano gerado ainda.</p>
+                    <p>Clique em "Gerar Plano" para criar seu roteiro personalizado.</p>
+                </div>
             }
             else
             {
                 <div class="plans-list">
+                    @{
+                        var planIdx = 0;
+                    }
                     @foreach (var plan in _plans!)
                     {
                         <div class="plan-card @(plan.Status == PlanStatus.Failed ? "failed" : "")"
+                             style="--i: @planIdx"
                              @onclick="() => ViewPlan(plan.Id)">
-                            <div class="plan-status">
-                                <span class="status-badge status-@plan.Status.ToString().ToLower()">
-                                    @(plan.Status switch
-                                    {
-                                        PlanStatus.Pending => "Pendente",
-                                        PlanStatus.Processing => "Processando",
-                                        PlanStatus.Completed => "Concluído",
-                                        PlanStatus.Failed => "Falhou",
-                                        _ => plan.Status.ToString()
-                                    })
-                                </span>
+                            <div class="plan-stub">
+                                <span class="plan-number">@(planIdx + 1)</span>
                             </div>
-                            <div class="plan-info">
-                                <span>@plan.GeneratedAt.ToString("dd/MM/yyyy HH:mm")</span>
-                                @if (!string.IsNullOrEmpty(plan.Model))
-                                {
-                                    <span>@plan.Model</span>
-                                }
+                            <div class="plan-body">
+                                <div class="plan-top">
+                                    <span class="status-badge status-@plan.Status.ToString().ToLower()">
+                                        @(plan.Status switch
+                                        {
+                                            PlanStatus.Pending => "Pendente",
+                                            PlanStatus.Processing => "Processando",
+                                            PlanStatus.Completed => "Concluído",
+                                            PlanStatus.Failed => "Falhou",
+                                            _ => plan.Status.ToString()
+                                        })
+                                    </span>
+                                </div>
+                                <div class="plan-info">
+                                    <span>@plan.GeneratedAt.ToString("dd/MM/yyyy HH:mm")</span>
+                                    @if (!string.IsNullOrEmpty(plan.Model))
+                                    {
+                                        <span class="plan-model">@plan.Model</span>
+                                    }
+                                </div>
                             </div>
                         </div>
+
+                        planIdx++;
                     }
                 </div>
             }

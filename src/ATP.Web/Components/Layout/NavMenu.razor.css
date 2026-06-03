@@ -1,6 +1,37 @@
+/* ── Sidebar Header ── */
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 1.25rem 1rem 0.75rem;
+    border-bottom: 3px solid var(--color-border);
+    margin: 0 0.5rem;
+}
+
+.sidebar-icon {
+    font-size: 1.3rem;
+}
+
+.sidebar-brand {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    letter-spacing: -0.01em;
+}
+
+.drawer-header {
+    display: none;
+}
+
+/* ── Toggle (hidden) ── */
+
 .nav-toggle {
     display: none;
 }
+
+/* ── Desktop hamburger hidden ── */
 
 .hamburger {
     display: none;
@@ -10,6 +41,8 @@
     display: none;
 }
 
+/* ── Nav Drawer (desktop) ── */
+
 .nav-drawer {
     display: block;
     background-color: var(--color-bg-sidebar);
@@ -18,7 +51,7 @@
 .nav-links {
     display: flex;
     flex-direction: column;
-    padding: 1rem 0.75rem;
+    padding: 0.75rem 0.5rem;
     gap: 0.25rem;
 }
 
@@ -27,30 +60,61 @@
 }
 
 .nav-link {
-    display: block;
-    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.7rem 1rem;
     color: var(--color-text-secondary);
-    border: var(--border-width-cartoon) solid transparent;
-    border-radius: var(--border-radius-sm);
+    border: 3px solid transparent;
+    border-radius: 12px;
     text-decoration: none;
-    font-size: 0.95rem;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 0.93rem;
     font-weight: 500;
-    transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+    transition: background-color 0.15s, color 0.15s, border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+}
+
+.nav-link-icon {
+    font-size: 1rem;
+    flex-shrink: 0;
 }
 
 .nav-link.active {
     background-color: var(--color-primary);
     color: var(--color-text-on-primary);
     border-color: var(--color-primary-hover);
+    box-shadow: var(--shadow-cartoon);
 }
 
 .nav-link:hover {
     background-color: var(--color-primary-hover);
     color: var(--color-text-on-primary);
     border-color: var(--color-primary);
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3);
 }
 
+.nav-link:active {
+    transform: translate(1px, 1px);
+    box-shadow: none;
+}
+
+/* ── Mobile ── */
+
 @media (max-width: 640.98px) {
+    .sidebar-header {
+        display: none;
+    }
+
+    .drawer-header {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.75rem 1rem 0.5rem;
+        border-bottom: 3px solid var(--color-border);
+        margin: 0 0.5rem 0.5rem;
+    }
+
     .hamburger {
         display: flex;
         flex-direction: column;
@@ -64,9 +128,21 @@
         z-index: 100;
         cursor: pointer;
         padding: 0.6rem;
-        border: var(--border-width-cartoon) solid var(--color-border);
-        border-radius: var(--border-radius-sm);
+        border: 3px solid var(--color-border);
+        border-radius: 12px;
         background: var(--color-bg-sidebar);
+        box-shadow: var(--shadow-cartoon);
+        transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .hamburger:hover {
+        transform: translate(-1px, -1px);
+        box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.3);
+    }
+
+    .hamburger:active {
+        transform: translate(1px, 1px);
+        box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
     }
 
     .hamburger span {
@@ -97,6 +173,16 @@
         z-index: 98;
     }
 
+    .nav-toggle:checked ~ .nav-backdrop {
+        display: block;
+        animation: backdropFadeIn 0.25s ease both;
+    }
+
+    @keyframes backdropFadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
     .nav-toggle ~ .nav-drawer {
         position: fixed;
         top: 0;
@@ -107,15 +193,16 @@
         z-index: 99;
         transform: translateX(-100%);
         transition: transform 0.25s ease;
-        padding: 4rem 0.5rem 0.5rem;
-    }
-
-    .nav-toggle:checked ~ .nav-backdrop {
-        display: block;
+        padding: 0.5rem;
     }
 
     .nav-toggle:checked ~ .nav-drawer {
         transform: translateX(0);
+    }
+
+    /* Shift hamburger inside drawer when open */
+    .nav-toggle:checked ~ .hamburger {
+        left: calc(260px + 0.75rem);
     }
 
     .nav-close {
@@ -127,18 +214,36 @@
         right: 0.75rem;
         width: 2.25rem;
         height: 2.25rem;
-        font-size: 1.25rem;
+        font-size: 1.2rem;
         color: var(--color-text-secondary);
         cursor: pointer;
-        border: var(--border-width-cartoon) solid var(--color-border);
-        border-radius: var(--border-radius-sm);
+        border: 3px solid var(--color-border);
+        border-radius: 10px;
         background: var(--color-bg-surface);
-        transition: background-color 0.15s;
+        transition: background-color 0.15s, transform 0.15s, box-shadow 0.15s;
+        box-shadow: var(--shadow-cartoon);
     }
 
     .nav-close:hover {
         background-color: var(--color-primary-hover);
         color: var(--color-text-on-primary);
         border-color: var(--color-primary);
+        transform: translate(-1px, -1px);
+        box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3);
+    }
+
+    .nav-close:active {
+        transform: translate(1px, 1px);
+        box-shadow: none;
+    }
+
+    .nav-links {
+        padding-top: 3.5rem;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+
+    .nav-link {
+        padding: 0.7rem 1rem;
     }
 }

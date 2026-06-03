@@ -6,68 +6,72 @@
 <PageTitle>Nova Viagem - AI Travel Planner</PageTitle>
 
 <div class="new-trip">
-    <h1>Nova Viagem</h1>
+    <div class="page-header">
+        <h1><span class="page-icon">✈</span> Nova Viagem</h1>
+    </div>
 
-    <EditForm Model="@_trip" OnValidSubmit="@HandleSubmit" FormName="newTrip">
-        <DataAnnotationsValidator />
+    <div class="form-card">
+        <EditForm Model="@_trip" OnValidSubmit="@HandleSubmit" FormName="newTrip">
+            <DataAnnotationsValidator />
 
-        <div class="form-group">
-            <label for="destination">Destino</label>
-            <InputText id="destination" class="w-full px-3 py-2 border-[var(--color-border)] rounded-[var(--border-radius-sm)] bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]" @bind-Value="_trip.Destination" />
-            <ValidationMessage For="() => _trip.Destination" />
-        </div>
-
-        <div class="form-group">
-            <label for="country">País</label>
-            <InputText id="country" class="w-full px-3 py-2 border-[var(--color-border)] rounded-[var(--border-radius-sm)] bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]" @bind-Value="_trip.Country" />
-            <ValidationMessage For="() => _trip.Country" />
-        </div>
-
-        <div class="form-row">
             <div class="form-group">
-                <label for="startDate">Data de Início</label>
-                <InputDate id="startDate" class="w-full px-3 py-2 border-[var(--color-border)] rounded-[var(--border-radius-sm)] bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]" @bind-Value="_trip.StartDate" />
-                <ValidationMessage For="() => _trip.StartDate" />
+                <label for="destination">Destino</label>
+                <InputText id="destination" class="form-input" @bind-Value="_trip.Destination" />
+                <ValidationMessage For="() => _trip.Destination" />
             </div>
+
             <div class="form-group">
-                <label for="endDate">Data de Término</label>
-                <InputDate id="endDate" class="w-full px-3 py-2 border-[var(--color-border)] rounded-[var(--border-radius-sm)] bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]" @bind-Value="_trip.EndDate" />
-                <ValidationMessage For="() => _trip.EndDate" />
+                <label for="country">País</label>
+                <InputText id="country" class="form-input" @bind-Value="_trip.Country" />
+                <ValidationMessage For="() => _trip.Country" />
             </div>
-        </div>
 
-        <div class="form-row">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="startDate">Data de Início</label>
+                    <InputDate id="startDate" class="form-input" @bind-Value="_trip.StartDate" />
+                    <ValidationMessage For="() => _trip.StartDate" />
+                </div>
+                <div class="form-group">
+                    <label for="endDate">Data de Término</label>
+                    <InputDate id="endDate" class="form-input" @bind-Value="_trip.EndDate" />
+                    <ValidationMessage For="() => _trip.EndDate" />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="numberOfPeople">Pessoas</label>
+                    <InputNumber id="numberOfPeople" class="form-input" @bind-Value="_trip.NumberOfPeople" />
+                    <ValidationMessage For="() => _trip.NumberOfPeople" />
+                </div>
+                <div class="form-group">
+                    <label for="budget">Orçamento</label>
+                    <InputNumber id="budget" class="form-input" @bind-Value="_trip.Budget" />
+                    <ValidationMessage For="() => _trip.Budget" />
+                </div>
+            </div>
+
             <div class="form-group">
-                <label for="numberOfPeople">Pessoas</label>
-                <InputNumber id="numberOfPeople" class="w-full px-3 py-2 border-[var(--color-border)] rounded-[var(--border-radius-sm)] bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]" @bind-Value="_trip.NumberOfPeople" />
-                <ValidationMessage For="() => _trip.NumberOfPeople" />
+                <label for="objectives">O que pretende fazer</label>
+                <InputTextArea id="objectives" class="form-input form-textarea" @bind-Value="_trip.Objectives" />
+                <ValidationMessage For="() => _trip.Objectives" />
             </div>
+
             <div class="form-group">
-                <label for="budget">Orçamento</label>
-                <InputNumber id="budget" class="w-full px-3 py-2 border-[var(--color-border)] rounded-[var(--border-radius-sm)] bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]" @bind-Value="_trip.Budget" />
-                <ValidationMessage For="() => _trip.Budget" />
+                <label for="additionalNotes">Observações adicionais</label>
+                <InputTextArea id="additionalNotes" class="form-input form-textarea" @bind-Value="_trip.AdditionalNotes" />
+                <ValidationMessage For="() => _trip.AdditionalNotes" />
             </div>
-        </div>
 
-        <div class="form-group">
-            <label for="objectives">O que pretende fazer</label>
-            <InputTextArea id="objectives" class="w-full px-3 py-2 border-[var(--color-border)] rounded-[var(--border-radius-sm)] bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]" @bind-Value="_trip.Objectives" />
-            <ValidationMessage For="() => _trip.Objectives" />
-        </div>
-
-        <div class="form-group">
-            <label for="additionalNotes">Observações adicionais</label>
-            <InputTextArea id="additionalNotes" class="w-full px-3 py-2 border-[var(--color-border)] rounded-[var(--border-radius-sm)] bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]" @bind-Value="_trip.AdditionalNotes" />
-            <ValidationMessage For="() => _trip.AdditionalNotes" />
-        </div>
-
-        <div class="form-actions">
-            <button type="submit" class="bg-[var(--color-primary)] text-[var(--color-text-on-primary)] px-4 py-2 rounded-[var(--border-radius-sm)] hover:bg-[var(--color-primary-hover)] transition-colors disabled:opacity-50 font-bold" disabled="@_saving">
-                @(_saving ? "Salvando..." : "Salvar Viagem")
-            </button>
-            <button type="button" class="bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] px-4 py-2 rounded-[var(--border-radius-sm)] border-[var(--border-width-cartoon)] border-[var(--color-border)] hover:bg-[var(--color-primary)] hover:text-[var(--color-text-on-primary)] transition-colors" @onclick="Cancel">Cancelar</button>
-        </div>
-    </EditForm>
+            <div class="form-actions">
+                <button type="submit" class="btn-primary" disabled="@_saving">
+                    @(_saving ? "Salvando..." : "Salvar Viagem")
+                </button>
+                <button type="button" class="btn-secondary" @onclick="Cancel">Cancelar</button>
+            </div>
+        </EditForm>
+    </div>
 </div>
 
 @code {

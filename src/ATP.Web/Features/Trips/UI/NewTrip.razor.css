@@ -1,14 +1,44 @@
 .new-trip {
-    padding: 1rem;
+    padding: 1.5rem;
     background-color: var(--color-bg-base);
+    min-height: 100%;
 }
 
-.new-trip h1 {
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
-    color: var(--color-primary);
-    font-weight: var(--font-weight-heading);
+/* ── Page Header ── */
+
+.page-header {
+    margin-bottom: 1.75rem;
+    animation: fadeInDown 0.5s ease both;
 }
+
+.page-header h1 {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.65rem;
+    margin: 0;
+    color: var(--color-text-primary);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.page-icon {
+    font-size: 1.4rem;
+}
+
+/* ── Form Card ── */
+
+.form-card {
+    background: var(--color-bg-surface);
+    border: 3px solid var(--color-border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow-cartoon);
+    animation: fadeInUp 0.5s ease both;
+    max-width: 640px;
+}
+
+/* ── Form Group ── */
 
 .form-group {
     margin-bottom: 1rem;
@@ -16,10 +46,34 @@
 
 .form-group label {
     display: block;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.35rem;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 0.88rem;
     font-weight: 500;
-    font-size: 0.9rem;
     color: var(--color-text-primary);
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    background: var(--color-bg-base);
+    border: 3px solid var(--color-border);
+    border-radius: 10px;
+    color: var(--color-text-primary);
+    font-size: 0.92rem;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    box-sizing: border-box;
+}
+
+.form-input:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.3);
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 80px;
 }
 
 .form-row {
@@ -31,18 +85,113 @@
     flex: 1;
 }
 
+/* ── Validation ── */
+
+.validation-message {
+    color: #ff6b6b;
+    font-size: 0.78rem;
+    margin-top: 0.3rem;
+    display: block;
+}
+
+/* ── Buttons ── */
+
 .form-actions {
     display: flex;
     gap: 0.75rem;
-    margin-top: 1.5rem;
+    margin-top: 1.75rem;
 }
 
 .form-actions button {
     flex: 1;
 }
 
-.validation-message {
-    color: #e50000;
-    font-size: 0.8rem;
-    margin-top: 0.25rem;
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: var(--color-primary);
+    color: var(--color-text-on-primary);
+    padding: 0.7rem 1.25rem;
+    border: 3px solid var(--color-primary-hover);
+    border-radius: 14px;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    box-shadow: var(--shadow-cartoon);
+    transition: transform 0.15s, box-shadow 0.15s;
+    line-height: 1;
+}
+
+.btn-primary:hover:not(:disabled) {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.3);
+}
+
+.btn-primary:active:not(:disabled) {
+    transform: translate(1px, 1px);
+    box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
+}
+
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: transparent;
+    color: var(--color-text-primary);
+    padding: 0.7rem 1.25rem;
+    border: 3px solid var(--color-border);
+    border-radius: 14px;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 500;
+    font-size: 0.95rem;
+    cursor: pointer;
+    box-shadow: var(--shadow-cartoon);
+    transition: transform 0.15s, box-shadow 0.15s, background-color 0.15s, color 0.15s, border-color 0.15s;
+    line-height: 1;
+}
+
+.btn-secondary:hover {
+    background: var(--color-primary);
+    color: var(--color-text-on-primary);
+    border-color: var(--color-primary-hover);
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.3);
+}
+
+.btn-secondary:active {
+    transform: translate(1px, 1px);
+    box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
+}
+
+/* ── Animations ── */
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
