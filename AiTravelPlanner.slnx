@@ -14,5 +14,7 @@
   <Folder Name="/src/">
     <Project Path="src/ATP.Web/ATP.Web.csproj" />
   </Folder>
-  <Folder Name="/tests/" />
+  <Folder Name="/tests/">
+    <Project Path="tests/ATP.Web.Tests/ATP.Web.Tests.csproj" />
+  </Folder>
 </Solution>
