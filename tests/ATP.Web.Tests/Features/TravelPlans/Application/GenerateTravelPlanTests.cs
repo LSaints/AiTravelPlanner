@@ -39,8 +39,12 @@ public class GenerateTravelPlanTests
         aiProvider.Setup(p => p.GenerateAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync("# Plano de viagem para Paris");
 
+        var geminiMetadata = new Mock<IGeminiMetadata>();
+        geminiMetadata.Setup(m => m.ProviderName).Returns("Gemini");
+        geminiMetadata.Setup(m => m.ModelName).Returns("gemini-2.0-flash");
+
         var logger = new Mock<ILogger<GenerateTravelPlan>>();
-        var useCase = new GenerateTravelPlan(tripRepo.Object, planRepo.Object, aiProvider.Object, logger.Object);
+        var useCase = new GenerateTravelPlan(tripRepo.Object, planRepo.Object, aiProvider.Object, geminiMetadata.Object, logger.Object);
 
         var result = await useCase.ExecuteAsync(tripId);
 
@@ -59,8 +63,9 @@ public class GenerateTravelPlanTests
 
         var planRepo = new Mock<ITravelPlanRepository>();
         var aiProvider = new Mock<IAIProvider>();
+        var geminiMetadata = new Mock<IGeminiMetadata>();
         var logger = new Mock<ILogger<GenerateTravelPlan>>();
-        var useCase = new GenerateTravelPlan(tripRepo.Object, planRepo.Object, aiProvider.Object, logger.Object);
+        var useCase = new GenerateTravelPlan(tripRepo.Object, planRepo.Object, aiProvider.Object, geminiMetadata.Object, logger.Object);
 
         var result = await useCase.ExecuteAsync(Guid.NewGuid());
 
@@ -94,8 +99,12 @@ public class GenerateTravelPlanTests
         aiProvider.Setup(p => p.GenerateAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ThrowsAsync(new HttpRequestException("API error"));
 
+        var geminiMetadata = new Mock<IGeminiMetadata>();
+        geminiMetadata.Setup(m => m.ProviderName).Returns("Gemini");
+        geminiMetadata.Setup(m => m.ModelName).Returns("gemini-2.0-flash");
+
         var logger = new Mock<ILogger<GenerateTravelPlan>>();
-        var useCase = new GenerateTravelPlan(tripRepo.Object, planRepo.Object, aiProvider.Object, logger.Object);
+        var useCase = new GenerateTravelPlan(tripRepo.Object, planRepo.Object, aiProvider.Object, geminiMetadata.Object, logger.Object);
 
         var result = await useCase.ExecuteAsync(tripId);
 
@@ -132,8 +141,12 @@ public class GenerateTravelPlanTests
         aiProvider.Setup(p => p.GenerateAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync("Plano");
 
+        var geminiMetadata = new Mock<IGeminiMetadata>();
+        geminiMetadata.Setup(m => m.ProviderName).Returns("Gemini");
+        geminiMetadata.Setup(m => m.ModelName).Returns("gemini-2.0-flash");
+
         var logger = new Mock<ILogger<GenerateTravelPlan>>();
-        var useCase = new GenerateTravelPlan(tripRepo.Object, planRepo.Object, aiProvider.Object, logger.Object);
+        var useCase = new GenerateTravelPlan(tripRepo.Object, planRepo.Object, aiProvider.Object, geminiMetadata.Object, logger.Object);
 
         await useCase.ExecuteAsync(tripId);
 

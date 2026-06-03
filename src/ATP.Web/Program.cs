@@ -44,9 +44,9 @@ builder.Services.AddScoped<DeleteTrip>();
 builder.Services.AddScoped<GenerateTravelPlan>();
 builder.Services.AddScoped<RegenerateTravelPlan>();
 
-builder.Services.Configure<OpenAiOptions>(builder.Configuration.GetSection(OpenAiOptions.SectionName));
-builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<OpenAiOptions>>().Value);
-builder.Services.AddHttpClient<IAIProvider, OpenAiProvider>();
+builder.Services.Configure<GeminiOptions>(builder.Configuration.GetSection(GeminiOptions.SectionName));
+builder.Services.AddSingleton<IGeminiMetadata, GeminiMetadata>();
+builder.Services.AddHttpClient<IAIProvider, GeminiProvider>();
 
 var app = builder.Build();
 

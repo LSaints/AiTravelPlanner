@@ -10,17 +10,20 @@ public class RegenerateTravelPlan
     private readonly ITripRepository _tripRepository;
     private readonly ITravelPlanRepository _planRepository;
     private readonly IAIProvider _aiProvider;
+    private readonly IGeminiMetadata _geminiMetadata;
     private readonly ILogger<RegenerateTravelPlan> _logger;
 
     public RegenerateTravelPlan(
         ITripRepository tripRepository,
         ITravelPlanRepository planRepository,
         IAIProvider aiProvider,
+        IGeminiMetadata geminiMetadata,
         ILogger<RegenerateTravelPlan> logger)
     {
         _tripRepository = tripRepository;
         _planRepository = planRepository;
         _aiProvider = aiProvider;
+        _geminiMetadata = geminiMetadata;
         _logger = logger;
     }
 
@@ -37,7 +40,9 @@ public class RegenerateTravelPlan
         {
             TripId = tripId,
             Prompt = PromptBuilder.Build(trip),
-            Status = PlanStatus.Pending
+            Status = PlanStatus.Pending,
+            AiProvider = _geminiMetadata.ProviderName,
+            Model = _geminiMetadata.ModelName
         };
 
         await _planRepository.CreateAsync(plan);

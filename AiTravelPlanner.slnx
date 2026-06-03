@@ -15,6 +15,11 @@
     <File Path="specs\dark-cartoon-theme\SPEC.md" />
     <File Path="specs\dark-cartoon-theme\TASKS.md" />
   </Folder>
+  <Folder Name="/specs/gemini-migration/">
+    <File Path="specs\gemini-migration\PLAN.md" />
+    <File Path="specs\gemini-migration\SPEC.md" />
+    <File Path="specs\gemini-migration\TASKS.md" />
+  </Folder>
   <Folder Name="/specs/tailwind-css-integration/" />
   <Folder Name="/src/">
     <Project Path="src/ATP.Web/ATP.Web.csproj" />

@@ -38,8 +38,12 @@ public class RegenerateTravelPlanTests
         aiProvider.Setup(p => p.GenerateAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync("# Plano gerado");
 
+        var geminiMetadata = new Mock<IGeminiMetadata>();
+        geminiMetadata.Setup(m => m.ProviderName).Returns("Gemini");
+        geminiMetadata.Setup(m => m.ModelName).Returns("gemini-2.0-flash");
+
         var logger = new Mock<ILogger<RegenerateTravelPlan>>();
-        var useCase = new RegenerateTravelPlan(tripRepo.Object, planRepo.Object, aiProvider.Object, logger.Object);
+        var useCase = new RegenerateTravelPlan(tripRepo.Object, planRepo.Object, aiProvider.Object, geminiMetadata.Object, logger.Object);
 
         // Generate first plan
         var plan1 = await useCase.ExecuteAsync(tripId);
@@ -60,8 +64,9 @@ public class RegenerateTravelPlanTests
 
         var planRepo = new Mock<ITravelPlanRepository>();
         var aiProvider = new Mock<IAIProvider>();
+        var geminiMetadata = new Mock<IGeminiMetadata>();
         var logger = new Mock<ILogger<RegenerateTravelPlan>>();
-        var useCase = new RegenerateTravelPlan(tripRepo.Object, planRepo.Object, aiProvider.Object, logger.Object);
+        var useCase = new RegenerateTravelPlan(tripRepo.Object, planRepo.Object, aiProvider.Object, geminiMetadata.Object, logger.Object);
 
         var result = await useCase.ExecuteAsync(Guid.NewGuid());
 
@@ -93,8 +98,12 @@ public class RegenerateTravelPlanTests
         aiProvider.Setup(p => p.GenerateAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ThrowsAsync(new Exception("Timeout"));
 
+        var geminiMetadata = new Mock<IGeminiMetadata>();
+        geminiMetadata.Setup(m => m.ProviderName).Returns("Gemini");
+        geminiMetadata.Setup(m => m.ModelName).Returns("gemini-2.0-flash");
+
         var logger = new Mock<ILogger<RegenerateTravelPlan>>();
-        var useCase = new RegenerateTravelPlan(tripRepo.Object, planRepo.Object, aiProvider.Object, logger.Object);
+        var useCase = new RegenerateTravelPlan(tripRepo.Object, planRepo.Object, aiProvider.Object, geminiMetadata.Object, logger.Object);
 
         var result = await useCase.ExecuteAsync(tripId);
 
