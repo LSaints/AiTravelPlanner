@@ -1,0 +1,52 @@
+.custom-notes-section {
+    background: var(--color-bg-surface);
+    border: var(--border-width-cartoon) solid var(--color-border);
+    border-radius: var(--border-radius-cartoon);
+    box-shadow: var(--shadow-cartoon);
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+
+.notes-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.card-icon {
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+.card-title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: var(--font-weight-heading);
+    color: var(--color-primary);
+}
+
+.note-card {
+    padding: 0.75rem;
+    border: var(--border-width-cartoon) solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    background: color-mix(in srgb, var(--color-bg-elevated) 30%, transparent);
+}
+
+.note-card + .note-card {
+    margin-top: 0.75rem;
+}
+
+.note-title {
+    margin: 0 0 0.35rem;
+    font-size: 1rem;
+    font-weight: var(--font-weight-heading);
+    color: var(--color-primary);
+}
+
+.note-content {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--color-text-primary);
+    line-height: 1.5;
+}

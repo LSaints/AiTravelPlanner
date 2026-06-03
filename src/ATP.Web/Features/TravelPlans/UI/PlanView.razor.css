@@ -71,14 +71,45 @@
     border-color: #721c24;
 }
 
-.generating {
+.state-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
     text-align: center;
-    padding: 2rem;
+    padding: 3rem 2rem;
     color: var(--color-text-secondary);
-    font-style: italic;
+}
+
+.state-message p {
+    font-size: 1.1rem;
+    color: var(--color-text-primary);
+    margin: 0;
+}
+
+.state-message small {
+    font-size: 0.85rem;
+    opacity: 0.7;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--color-border);
+    border-top-color: var(--color-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
 }
 
 .failed-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
     text-align: center;
     padding: 2rem;
     color: var(--color-text-primary);
@@ -88,63 +119,24 @@
     box-shadow: var(--shadow-cartoon);
 }
 
-.plan-content {
-    line-height: 1.7;
-    color: var(--color-text-primary);
+.failed-message p {
+    margin: 0;
 }
 
-.plan-content h1,
-.plan-content h2,
-.plan-content h3,
-.plan-content h4 {
-    margin-top: 1.5rem;
-    margin-bottom: 0.75rem;
-    color: var(--color-primary);
-    font-weight: var(--font-weight-heading);
-}
-
-.plan-content h1 { font-size: 1.5rem; }
-.plan-content h2 { font-size: 1.25rem; }
-.plan-content h3 { font-size: 1.1rem; }
-
-.plan-content p {
-    margin-bottom: 0.75rem;
-}
-
-.plan-content ul,
-.plan-content ol {
-    margin-bottom: 0.75rem;
-    padding-left: 1.5rem;
-}
-
-.plan-content li {
-    margin-bottom: 0.25rem;
-}
-
-.plan-content table {
-    width: 100%;
-    border-collapse: collapse;
+.plan-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
     margin-bottom: 1rem;
 }
 
-.plan-content th,
-.plan-content td {
-    border: var(--border-width-cartoon) solid var(--color-border);
-    padding: 0.5rem;
-    text-align: left;
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
-.plan-content th {
-    background: var(--color-bg-surface);
-    font-weight: var(--font-weight-heading);
-}
-
-.plan-content strong {
-    font-weight: var(--font-weight-heading);
-}
-
-.plan-content hr {
-    border: none;
-    border-top: var(--border-width-cartoon) solid var(--color-border);
-    margin: 1.5rem 0;
+.plan-content {
+    line-height: 1.8;
+    color: var(--color-text-primary);
+    font-size: 1rem;
 }

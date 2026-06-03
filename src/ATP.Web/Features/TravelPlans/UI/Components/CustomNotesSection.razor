@@ -1,0 +1,17 @@
+@if (!string.IsNullOrWhiteSpace(Notes))
+{
+    <div class="custom-notes-section" role="region" aria-label="Notas Personalizadas">
+        <div class="notes-header">
+            <span class="card-icon" aria-hidden="true">📝</span>
+            <h2 class="card-title">Notas Personalizadas</h2>
+        </div>
+        <div class="note-card">
+            <p class="note-content">@Notes</p>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string? Notes { get; set; }
+}

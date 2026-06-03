@@ -1,8 +1,14 @@
 @page "/trips/{TripId:guid}/plans/{PlanId:guid}"
+@using Markdig
+@using Microsoft.JSInterop
 @using ATP.Web.Features.TravelPlans.Domain
 @using ATP.Web.Features.TravelPlans.Application
+@using ATP.Web.Features.TravelPlans.UI.Components
 @inject ITravelPlanRepository TravelPlanRepository
 @inject NavigationManager Navigation
+@inject IJSRuntime JS
+@inject RegenerateTravelPlan RegenerateTravelPlanUseCase
+@implements IAsyncDisposable
 
 <PageTitle>Plano de Viagem - AI Travel Planner</PageTitle>
 
@@ -38,23 +44,62 @@
                     }
                 </div>
             </div>
-            <button class="border-[var(--color-border)] text-[var(--color-text-primary)] px-4 py-2 rounded-[var(--border-radius-sm)] hover:bg-[var(--color-primary)] hover:text-[var(--color-text-on-primary)] transition-colors font-bold" @onclick="GoBack">Voltar</button>
+            <div class="flex items-center gap-2">
+                <button class="border-[var(--color-border)] text-[var(--color-text-primary)] px-4 py-2 rounded-[var(--border-radius-sm)] hover:bg-[var(--color-primary)] hover:text-[var(--color-text-on-primary)] transition-colors font-bold" @onclick="GoBack">Voltar</button>
+            </div>
         </header>
 
         @switch (_plan.Status)
         {
+            case PlanStatus.Pending:
+                <div class="state-message">
+                    <div class="spinner"></div>
+                    <p>Plano aguardando processamento...</p>
+                </div>
+                break;
             case PlanStatus.Processing:
-                <div class="generating">Gerando plano com IA...</div>
+                <div class="state-message">
+                    <div class="spinner"></div>
+                    <p>Gerando plano com inteligência artificial...</p>
+                    <small>Isso pode levar alguns segundos</small>
+                </div>
                 break;
             case PlanStatus.Failed:
                 <div class="failed-message">
-                    Não foi possível gerar o plano de viagem. Tente novamente em alguns instantes.
+                    <p>Não foi possível gerar o plano de viagem.</p>
+                    <button class="border-[var(--color-border)] text-[var(--color-text-primary)] px-4 py-2 rounded-[var(--border-radius-sm)] hover:bg-[var(--color-primary)] hover:text-[var(--color-text-on-primary)] transition-colors font-bold" disabled="@_regenerating" @onclick="Regenerate">
+                        @if (_regenerating) { <span>Regenerando...</span> }
+                        else { <span>Tentar Novamente</span> }
+                    </button>
                 </div>
                 break;
             case PlanStatus.Completed:
-                <div class="plan-content">
-                    @((MarkupString)_renderedContent)
+                <div class="plan-actions">
+                    <button class="border-[var(--color-border)] text-[var(--color-text-primary)] px-4 py-2 rounded-[var(--border-radius-sm)] hover:bg-[var(--color-primary)] hover:text-[var(--color-text-on-primary)] transition-colors font-bold" @onclick="CopyToClipboard">@_copyLabel</button>
+                    <button class="border-[var(--color-border)] text-[var(--color-text-primary)] px-4 py-2 rounded-[var(--border-radius-sm)] hover:bg-[var(--color-primary)] hover:text-[var(--color-text-on-primary)] transition-colors font-bold" disabled="@_regenerating" @onclick="Regenerate">
+                        @if (_regenerating) { <span>Regenerando...</span> }
+                        else { <span>Gerar Novo Plano</span> }
+                    </button>
                 </div>
+                @if (_parsedData is not null)
+                {
+                    <div class="structured-plan">
+                        <StrategicSummaryCard Summary="_parsedData.Summary" />
+                        @foreach (var day in _parsedData.Days)
+                        {
+                            <DayCard DayItinerary="day" />
+                        }
+                        <BudgetTable Budget="_parsedData.Budget" />
+                        <ChecklistSection Checklist="_parsedData.Checklist" />
+                        @* <CustomNotesSection Notes="_parsedData.Notes" /> *@
+                    </div>
+                }
+                else
+                {
+                    <div class="plan-content">
+                        @((MarkupString)_renderedContent)
+                    </div>
+                }
                 break;
         }
     }
@@ -68,21 +113,140 @@
     public Guid PlanId { get; set; }
 
     private TravelPlan? _plan;
+    private TravelPlanData? _parsedData;
     private string _renderedContent = string.Empty;
     private bool _loading = true;
+    private bool _regenerating;
+    private string _copyLabel = "Copiar Plano";
+    private Timer? _pollingTimer;
+    private bool _disposed;
 
     protected override async Task OnInitializedAsync()
+    {
+        await LoadPlan();
+
+        if (_plan is { Status: PlanStatus.Processing or PlanStatus.Pending })
+        {
+            StartPolling();
+        }
+    }
+
+    private async Task LoadPlan()
     {
         _plan = await TravelPlanRepository.GetByIdAsync(PlanId);
         if (_plan is { Status: PlanStatus.Completed })
         {
-            _renderedContent = Markdig.Markdown.ToHtml(_plan.GeneratedContent);
+            RenderContent();
         }
         _loading = false;
+    }
+
+    private void RenderContent()
+    {
+        if (TravelPlanParser.TryParse(_plan!.GeneratedContent, out var data))
+        {
+            _parsedData = data;
+            _renderedContent = string.Empty;
+        }
+        else
+        {
+            _parsedData = null;
+            var pipeline = new MarkdownPipelineBuilder()
+                .UseAdvancedExtensions()
+                .Build();
+            _renderedContent = Markdown.ToHtml(_plan.GeneratedContent, pipeline);
+        }
+    }
+
+    private void StartPolling()
+    {
+        _pollingTimer = new Timer(async _ =>
+        {
+            if (_disposed) return;
+
+            try
+            {
+                var updated = await TravelPlanRepository.GetByIdAsync(PlanId);
+                if (updated is null || updated.Status == _plan?.Status) return;
+
+                _plan = updated;
+
+                if (updated.Status is PlanStatus.Completed)
+                {
+                    RenderContent();
+                    StopPolling();
+                }
+
+                await InvokeAsync(StateHasChanged);
+            }
+            catch
+            {
+                // Silently retry on next tick
+            }
+        }, null, TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(3));
+    }
+
+    private void StopPolling()
+    {
+        _pollingTimer?.Dispose();
+        _pollingTimer = null;
+    }
+
+    private async Task CopyToClipboard()
+    {
+        if (_plan is null) return;
+
+        var textToCopy = _parsedData is not null
+            ? TravelPlanParser.ToPlainText(_parsedData)
+            : _plan.GeneratedContent;
+
+        try
+        {
+            await JS.InvokeVoidAsync("navigator.clipboard.writeText", textToCopy);
+            _copyLabel = "Copiado!";
+            await InvokeAsync(StateHasChanged);
+            await Task.Delay(2000);
+            _copyLabel = "Copiar Plano";
+            await InvokeAsync(StateHasChanged);
+        }
+        catch
+        {
+            _copyLabel = "Erro ao copiar";
+            await InvokeAsync(StateHasChanged);
+            await Task.Delay(2000);
+            _copyLabel = "Copiar Plano";
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private async Task Regenerate()
+    {
+        if (_regenerating) return;
+        _regenerating = true;
+
+        try
+        {
+            var newPlan = await RegenerateTravelPlanUseCase.ExecuteAsync(TripId);
+            if (newPlan is not null)
+            {
+                StopPolling();
+                Navigation.NavigateTo($"/trips/{TripId}/plans/{newPlan.Id}");
+            }
+        }
+        finally
+        {
+            _regenerating = false;
+        }
     }
 
     private void GoBack()
     {
         Navigation.NavigateTo($"/trips/{TripId}");
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        _disposed = true;
+        StopPolling();
     }
 }

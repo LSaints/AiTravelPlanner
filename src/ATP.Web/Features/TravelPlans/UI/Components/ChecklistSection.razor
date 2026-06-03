@@ -1,0 +1,29 @@
+@using ATP.Web.Features.TravelPlans.Domain
+
+<div class="checklist-section" role="region" aria-label="Checklist e Cuidados">
+    <div class="checklist-header">
+        <span class="card-icon" aria-hidden="true">✅</span>
+        <h2 class="card-title">Checklist e Cuidados</h2>
+    </div>
+    <div class="checklist-grid">
+        @foreach (var item in Checklist)
+        {
+            <div class="checklist-item @(item.IsEssential ? "essential" : "")">
+                <span class="check-icon" aria-hidden="true">✔</span>
+                <span class="check-text">@item.Text</span>
+                <span class="check-category">@item.Category</span>
+                @if (item.IsEssential)
+                {
+                    <span class="essential-badge" role="status">
+                        <span aria-hidden="true">⭐ </span>Essencial
+                    </span>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public List<ChecklistItem> Checklist { get; set; } = [];
+}

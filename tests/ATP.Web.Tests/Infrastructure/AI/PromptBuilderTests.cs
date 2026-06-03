@@ -42,7 +42,7 @@ public class PromptBuilderTests
 
         var prompt = PromptBuilder.Build(trip);
 
-        Assert.Contains("9 dias", prompt);
+        Assert.Contains("10 dias", prompt);
     }
 
     [Fact]
@@ -102,7 +102,7 @@ public class PromptBuilderTests
         var prompt = PromptBuilder.Build(trip);
 
         Assert.Contains("Alergia a frutos do mar", prompt);
-        Assert.Contains("Observações adicionais", prompt);
+        Assert.Contains("Notas Personalizadas", prompt);
     }
 
     [Fact]
@@ -121,7 +121,7 @@ public class PromptBuilderTests
 
         var prompt = PromptBuilder.Build(trip);
 
-        Assert.DoesNotContain("Observações adicionais", prompt);
+        Assert.DoesNotContain("Notas Personalizadas", prompt);
     }
 
     [Fact]
@@ -140,10 +140,10 @@ public class PromptBuilderTests
 
         var prompt = PromptBuilder.Build(trip);
 
-        Assert.Contains("Resumo", prompt);
-        Assert.Contains("Custos estimados", prompt);
-        Assert.Contains("Roteiro diário", prompt);
-        Assert.Contains("Cuidados", prompt);
-        Assert.Contains("Dicas locais", prompt);
+        Assert.Contains("Planejamento Estratégico", prompt);
+        Assert.Contains("Itinerário Detalhado", prompt);
+        Assert.Contains("Distribuição Estimada do Orçamento", prompt);
+        Assert.Contains("Checklist e Cuidados", prompt);
+        Assert.Contains("RESTRIÇÃO", prompt);
     }
 }

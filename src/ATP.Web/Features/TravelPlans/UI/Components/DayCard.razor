@@ -1,0 +1,39 @@
+@using ATP.Web.Features.TravelPlans.Domain
+
+<div class="day-card" role="region" aria-label="Dia @DayItinerary.Day - @DayItinerary.Title">
+    <button class="day-header" @onclick="ToggleCollapse" aria-expanded="@_expanded" aria-controls="day-body-@DayItinerary.Day">
+        <span class="day-number">Dia @DayItinerary.Day</span>
+        <span class="day-title">@DayItinerary.Title</span>
+        <span class="collapse-icon" aria-hidden="true">@(_expanded ? "−" : "+")</span>
+    </button>
+    <div id="day-body-@DayItinerary.Day" class="day-body" style="display: @(_expanded ? "block" : "none")">
+        <div class="activity-section">
+            <span class="activity-label">🌅 Manhã</span>
+            <p class="activity-text">@DayItinerary.Morning</p>
+        </div>
+        <div class="activity-section">
+            <span class="activity-label">🍽️ Almoço</span>
+            <p class="activity-text">@DayItinerary.Lunch</p>
+        </div>
+        <div class="activity-section">
+            <span class="activity-label">☀️ Tarde</span>
+            <p class="activity-text">@DayItinerary.Afternoon</p>
+        </div>
+        <div class="activity-section">
+            <span class="activity-label">🌙 Noite</span>
+            <p class="activity-text">@DayItinerary.Evening</p>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public DayItinerary DayItinerary { get; set; } = new();
+
+    private bool _expanded = true;
+
+    private void ToggleCollapse()
+    {
+        _expanded = !_expanded;
+    }
+}

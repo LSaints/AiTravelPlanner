@@ -1,0 +1,40 @@
+@using ATP.Web.Features.TravelPlans.Domain
+
+<div class="budget-table-wrapper" role="region" aria-label="Distribuição de Orçamento">
+    <div class="budget-table-header">
+        <span class="card-icon" aria-hidden="true">💰</span>
+        <h2 class="card-title">Distribuição de Orçamento</h2>
+    </div>
+    <div class="table-scroll">
+        <table class="budget-table">
+            <thead>
+                <tr>
+                    <th>Categoria</th>
+                    <th>Descrição</th>
+                    <th class="col-cost">Custo Estimado</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Budget)
+                {
+                    <tr>
+                        <td class="col-category">@item.Category</td>
+                        <td class="col-description">@item.Description</td>
+                        <td class="col-cost">@item.EstimatedCost.ToString("C")</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2" class="total-label">Total</td>
+                    <td class="total-value">@Budget.Sum(i => i.EstimatedCost).ToString("C")</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public List<BudgetItem> Budget { get; set; } = [];
+}

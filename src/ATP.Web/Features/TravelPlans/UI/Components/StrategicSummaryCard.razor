@@ -1,0 +1,27 @@
+@using ATP.Web.Features.TravelPlans.Domain
+
+<div class="strategic-summary-card" role="region" aria-label="Resumo Estratégico">
+    <div class="card-header">
+        <span class="card-icon" aria-hidden="true">🗺️</span>
+        <h2 class="card-title">Resumo Estratégico</h2>
+    </div>
+    <div class="card-body">
+        <div class="info-item">
+            <span class="info-label">Logística</span>
+            <span class="info-value">@Summary.Logistics</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Transporte</span>
+            <span class="info-value">@Summary.Transportation</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Melhor Época</span>
+            <span class="info-value">@Summary.BestTimeToVisit</span>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public StrategicSummary Summary { get; set; } = new();
+}

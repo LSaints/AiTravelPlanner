@@ -1,0 +1,71 @@
+.day-card {
+    background: var(--color-bg-surface);
+    border: var(--border-width-cartoon) solid var(--color-border);
+    border-radius: var(--border-radius-cartoon);
+    box-shadow: var(--shadow-cartoon);
+    margin-bottom: 1rem;
+    overflow: hidden;
+}
+
+.day-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: var(--color-primary);
+    border: none;
+    cursor: pointer;
+    color: var(--color-text-on-primary);
+    font-family: inherit;
+    font-size: 1rem;
+    text-align: left;
+    transition: background 0.2s;
+}
+
+.day-header:hover {
+    background: var(--color-primary-hover);
+}
+
+.day-number {
+    font-weight: var(--font-weight-heading);
+    white-space: nowrap;
+}
+
+.day-title {
+    flex: 1;
+    font-weight: var(--font-weight-heading);
+    opacity: 0.9;
+}
+
+.collapse-icon {
+    font-size: 1.25rem;
+    font-weight: var(--font-weight-heading);
+    line-height: 1;
+}
+
+.day-body {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.activity-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.activity-label {
+    font-size: 0.85rem;
+    font-weight: var(--font-weight-heading);
+    color: var(--color-primary);
+}
+
+.activity-text {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--color-text-primary);
+    line-height: 1.5;
+}
