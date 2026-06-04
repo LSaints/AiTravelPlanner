@@ -8,6 +8,7 @@
 @inject NavigationManager Navigation
 @inject IJSRuntime JS
 @inject RegenerateTravelPlan RegenerateTravelPlanUseCase
+@inject DeleteTravelPlan DeleteTravelPlanUseCase
 @implements IAsyncDisposable
 
 <PageTitle>Plano de Viagem - AI Travel Planner</PageTitle>
@@ -46,6 +47,7 @@
             </div>
             <div class="flex items-center gap-2">
                 <button class="border-[var(--color-border)] text-[var(--color-text-primary)] px-4 py-2 rounded-[var(--border-radius-sm)] hover:bg-[var(--color-primary)] hover:text-[var(--color-text-on-primary)] transition-colors font-bold" @onclick="GoBack">Voltar</button>
+                <button class="border-red-600 text-red-600 px-4 py-2 rounded-[var(--border-radius-sm)] hover:bg-red-600 hover:text-white transition-colors font-bold" @onclick="DeletePlanAsync">Excluir</button>
             </div>
         </header>
 
@@ -242,6 +244,24 @@
     private void GoBack()
     {
         Navigation.NavigateTo($"/trips/{TripId}");
+    }
+
+    private async Task DeletePlanAsync()
+    {
+        if (_plan?.Status == PlanStatus.Processing)
+        {
+            await JS.InvokeVoidAsync("alert", "Não é possível excluir um plano de viagem enquanto ele está em processamento.");
+            return;
+        }
+
+        var confirmed = await JS.InvokeAsync<bool>("confirm", "Tem certeza que deseja excluir este plano de viagem? Esta ação não pode ser desfeita.");
+        if (!confirmed) return;
+
+        var deleted = await DeleteTravelPlanUseCase.ExecuteAsync(PlanId);
+        if (deleted)
+        {
+            Navigation.NavigateTo($"/trips/{TripId}");
+        }
     }
 
     public async ValueTask DisposeAsync()

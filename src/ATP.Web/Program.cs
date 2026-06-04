@@ -43,6 +43,7 @@ builder.Services.AddScoped<GetTrip>();
 builder.Services.AddScoped<DeleteTrip>();
 builder.Services.AddScoped<GenerateTravelPlan>();
 builder.Services.AddScoped<RegenerateTravelPlan>();
+builder.Services.AddScoped<DeleteTravelPlan>();
 
 builder.Services.Configure<GeminiOptions>(builder.Configuration.GetSection(GeminiOptions.SectionName));
 builder.Services.AddSingleton<IGeminiMetadata, GeminiMetadata>();

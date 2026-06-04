@@ -3,10 +3,13 @@
 @using ATP.Web.Features.Trips.Application
 @using ATP.Web.Features.TravelPlans.Application
 @using ATP.Web.Features.TravelPlans.Domain
+@using Microsoft.JSInterop
 @inject GetTrip GetTripUseCase
 @inject ITravelPlanRepository TravelPlanRepository
 @inject GenerateTravelPlan GenerateTravelPlanUseCase
+@inject DeleteTrip DeleteTripUseCase
 @inject NavigationManager Navigation
+@inject IJSRuntime JS
 
 <PageTitle>Detalhes da Viagem - AI Travel Planner</PageTitle>
 
@@ -61,6 +64,7 @@
             </div>
             <div class="header-actions">
                 <button class="btn-secondary" @onclick="EditTrip">Editar</button>
+                <button class="btn-danger" @onclick="DeleteTripAsync">Excluir</button>
             </div>
         </header>
 
@@ -166,6 +170,18 @@
     private void EditTrip()
     {
         Navigation.NavigateTo($"/trips/{Id}/edit");
+    }
+
+    private async Task DeleteTripAsync()
+    {
+        var confirmed = await JS.InvokeAsync<bool>("confirm", "Tem certeza que deseja excluir esta viagem? Esta ação não pode ser desfeita.");
+        if (!confirmed) return;
+
+        var deleted = await DeleteTripUseCase.ExecuteAsync(Id);
+        if (deleted)
+        {
+            Navigation.NavigateTo("/");
+        }
     }
 
     private void ViewPlan(Guid planId)

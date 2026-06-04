@@ -31,4 +31,14 @@ public class TravelPlanRepository : ITravelPlanRepository
         await _context.TravelPlans.AddAsync(plan);
         await _context.SaveChangesAsync();
     }
+
+    public async Task DeleteAsync(Guid id)
+    {
+        var plan = await _context.TravelPlans.FindAsync(id);
+        if (plan is not null)
+        {
+            _context.TravelPlans.Remove(plan);
+            await _context.SaveChangesAsync();
+        }
+    }
 }

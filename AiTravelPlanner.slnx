@@ -26,6 +26,11 @@
     <File Path="specs\structured-travel-plan\TASKS.md" />
   </Folder>
   <Folder Name="/specs/tailwind-css-integration/" />
+  <Folder Name="/specs/trip-and-travel-plan-removal/">
+    <File Path="specs\trip-and-travel-plan-removal\PLAN.md" />
+    <File Path="specs\trip-and-travel-plan-removal\SPEC.md" />
+    <File Path="specs\trip-and-travel-plan-removal\TASKS.md" />
+  </Folder>
   <Folder Name="/src/">
     <Project Path="src/ATP.Web/ATP.Web.csproj" />
   </Folder>

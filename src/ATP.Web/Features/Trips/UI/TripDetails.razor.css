@@ -143,6 +143,7 @@
 }
 
 .header-actions {
+    gap: 6px;
     flex-shrink: 0;
     padding: 1rem 1.25rem 1rem 0;
     display: flex;
@@ -453,6 +454,56 @@
 .btn-secondary:active {
     transform: translate(1px, 1px);
     box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
+}
+
+/* ── Danger Button ── */
+
+.btn-danger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: transparent;
+    color: #ff4d4d;
+    padding: 0.6rem 1.15rem;
+    border: 3px solid #ff4d4d;
+    border-radius: 14px;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    box-shadow: var(--shadow-cartoon);
+    transition: transform 0.15s, box-shadow 0.15s, background-color 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s;
+    line-height: 1;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-danger::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 40%, rgba(255, 77, 77, 0.15), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.25s;
+    pointer-events: none;
+}
+
+.btn-danger:hover::before {
+    opacity: 1;
+}
+
+.btn-danger:hover {
+    background: #ff4d4d;
+    color: #1a1a2e;
+    border-color: #e60000;
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px rgba(255, 77, 77, 0.35);
+}
+
+.btn-danger:active {
+    transform: translate(1px, 1px);
+    box-shadow: 2px 2px 0px rgba(255, 77, 77, 0.35);
 }
 
 /* ── Animations ── */
