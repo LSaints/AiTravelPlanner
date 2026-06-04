@@ -1,0 +1,186 @@
+.step-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    padding: 1rem 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    position: relative;
+}
+
+.step-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: var(--font-weight-heading);
+    font-size: 0.95rem;
+    border: 3px solid var(--color-border);
+    background: transparent;
+    color: var(--color-text-secondary);
+    transition: background 0.3s, border-color 0.3s, color 0.3s, box-shadow 0.3s, transform 0.3s;
+    line-height: 1;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.step-label {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+    transition: color 0.3s;
+}
+
+/* ── Connector ── */
+
+.step-connector {
+    width: 60px;
+    height: 3px;
+    background: var(--color-border);
+    transition: background 0.3s;
+    flex-shrink: 0;
+    border-radius: 2px;
+}
+
+/* ── Active Step ── */
+
+.step-active .step-circle {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-text-on-primary);
+    box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.25), var(--shadow-cartoon);
+    animation: pulseGlow 2s ease-in-out infinite;
+    transform: scale(1.05);
+}
+
+.step-active .step-label {
+    color: var(--color-primary);
+    font-weight: var(--font-weight-heading);
+}
+
+/* ── Completed Step ── */
+
+.step-completed .step-circle {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-text-on-primary);
+    box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.15), var(--shadow-cartoon);
+    animation: stepComplete 0.4s ease both;
+}
+
+.step-completed .step-label {
+    color: var(--color-text-primary);
+}
+
+.step-check {
+    font-size: 1rem;
+    line-height: 1;
+    animation: checkIn 0.3s ease both;
+}
+
+/* ── Pending Step ── */
+
+.step-pending .step-circle {
+    background: transparent;
+    border-color: var(--color-border);
+    color: var(--color-text-secondary);
+}
+
+.step-pending .step-label {
+    color: var(--color-text-secondary);
+}
+
+/* ── Connector States ── */
+
+.connector-completed {
+    background: var(--color-primary);
+}
+
+.connector-pending {
+    background: var(--color-border);
+}
+
+/* ── Animations ── */
+
+@keyframes pulseGlow {
+    0%, 100% {
+        box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.25), var(--shadow-cartoon);
+    }
+    50% {
+        box-shadow: 0 0 0 8px rgba(255, 107, 53, 0.15), var(--shadow-cartoon);
+    }
+}
+
+@keyframes stepComplete {
+    0% {
+        transform: scale(1);
+    }
+    40% {
+        transform: scale(1.2);
+    }
+    70% {
+        transform: scale(0.95);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes checkIn {
+    0% {
+        opacity: 0;
+        transform: scale(0);
+    }
+    60% {
+        opacity: 1;
+        transform: scale(1.3);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ── Mobile ── */
+
+@media (max-width: 640px) {
+    .step-indicator {
+        padding: 0.75rem 0.25rem;
+        margin-bottom: 1rem;
+    }
+
+    .step-circle {
+        width: 32px;
+        height: 32px;
+        font-size: 0.8rem;
+        border-width: 2.5px;
+    }
+
+    .step-connector {
+        width: 36px;
+        height: 2.5px;
+    }
+
+    .step-label {
+        display: none;
+    }
+
+    .step-active .step-label {
+        display: block;
+        font-size: 0.7rem;
+        position: absolute;
+        top: calc(100% + 0.4rem);
+        white-space: nowrap;
+    }
+}

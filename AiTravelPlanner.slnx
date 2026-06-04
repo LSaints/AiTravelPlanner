@@ -20,6 +20,11 @@
     <File Path="specs\gemini-migration\SPEC.md" />
     <File Path="specs\gemini-migration\TASKS.md" />
   </Folder>
+  <Folder Name="/specs/multi-step-trip-form/">
+    <File Path="specs\multi-step-trip-form\PLAN.md" />
+    <File Path="specs\multi-step-trip-form\SPEC.md" />
+    <File Path="specs\multi-step-trip-form\TASKS.md" />
+  </Folder>
   <Folder Name="/specs/structured-travel-plan/">
     <File Path="specs\structured-travel-plan\PLAN.md" />
     <File Path="specs\structured-travel-plan\SPEC.md" />

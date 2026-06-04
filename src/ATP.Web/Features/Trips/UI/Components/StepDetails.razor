@@ -1,0 +1,19 @@
+<div class="step-details">
+    <div class="form-group">
+        <label for="objectives">O que pretende fazer</label>
+        <InputTextArea id="objectives" class="form-input form-textarea" @bind-Value="Model.Objectives" />
+        <ValidationMessage For="() => Model.Objectives" />
+    </div>
+
+    <div class="form-group">
+        <label for="additionalNotes">Observações adicionais</label>
+        <InputTextArea id="additionalNotes" class="form-input form-textarea" @bind-Value="Model.AdditionalNotes" />
+        <ValidationMessage For="() => Model.AdditionalNotes" />
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    [EditorRequired]
+    public TripFormModel Model { get; set; } = new();
+}

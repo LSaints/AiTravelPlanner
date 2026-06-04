@@ -1,5 +1,7 @@
 @page "/trips/new"
 @using ATP.Web.Features.Trips.Application
+@using ATP.Web.Features.Trips.UI.Components
+@using System.ComponentModel.DataAnnotations
 @inject CreateTrip CreateTripUseCase
 @inject NavigationManager Navigation
 
@@ -11,63 +13,42 @@
     </div>
 
     <div class="form-card">
-        <EditForm Model="@_trip" OnValidSubmit="@HandleSubmit" FormName="newTrip">
-            <DataAnnotationsValidator />
+        <StepIndicator TotalSteps="3" CurrentStep="_currentStep" StepLabels="_stepLabels" />
 
-            <div class="form-group">
-                <label for="destination">Destino</label>
-                <InputText id="destination" class="form-input" @bind-Value="_trip.Destination" />
-                <ValidationMessage For="() => _trip.Destination" />
-            </div>
-
-            <div class="form-group">
-                <label for="country">País</label>
-                <InputText id="country" class="form-input" @bind-Value="_trip.Country" />
-                <ValidationMessage For="() => _trip.Country" />
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="startDate">Data de Início</label>
-                    <InputDate id="startDate" class="form-input" @bind-Value="_trip.StartDate" />
-                    <ValidationMessage For="() => _trip.StartDate" />
-                </div>
-                <div class="form-group">
-                    <label for="endDate">Data de Término</label>
-                    <InputDate id="endDate" class="form-input" @bind-Value="_trip.EndDate" />
-                    <ValidationMessage For="() => _trip.EndDate" />
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="numberOfPeople">Pessoas</label>
-                    <InputNumber id="numberOfPeople" class="form-input" @bind-Value="_trip.NumberOfPeople" />
-                    <ValidationMessage For="() => _trip.NumberOfPeople" />
-                </div>
-                <div class="form-group">
-                    <label for="budget">Orçamento</label>
-                    <InputNumber id="budget" class="form-input" @bind-Value="_trip.Budget" />
-                    <ValidationMessage For="() => _trip.Budget" />
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="objectives">O que pretende fazer</label>
-                <InputTextArea id="objectives" class="form-input form-textarea" @bind-Value="_trip.Objectives" />
-                <ValidationMessage For="() => _trip.Objectives" />
-            </div>
-
-            <div class="form-group">
-                <label for="additionalNotes">Observações adicionais</label>
-                <InputTextArea id="additionalNotes" class="form-input form-textarea" @bind-Value="_trip.AdditionalNotes" />
-                <ValidationMessage For="() => _trip.AdditionalNotes" />
+        <EditForm EditContext="@_editContext" OnSubmit="@HandleSubmit" FormName="newTrip">
+            <div class="step-content">
+                @if (_currentStep == 0)
+                {
+                    <StepDestination @key="0" Model="@_trip" />
+                }
+                else if (_currentStep == 1)
+                {
+                    <StepBudget @key="1" Model="@_trip" />
+                }
+                else if (_currentStep == 2)
+                {
+                    <StepDetails @key="2" Model="@_trip" />
+                }
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="btn-primary" disabled="@_saving">
-                    @(_saving ? "Salvando..." : "Salvar Viagem")
+                <button type="button" class="btn-secondary" @onclick="GoToPreviousStep" style="@(_currentStep > 0 ? "" : "display:none")">
+                    Voltar
                 </button>
+
+                @if (_currentStep < 2)
+                {
+                    <button type="submit" class="btn-primary">
+                        Próximo
+                    </button>
+                }
+                else
+                {
+                    <button type="submit" class="btn-primary" disabled="@_saving">
+                        @(_saving ? "Salvando..." : "Salvar Viagem")
+                    </button>
+                }
+
                 <button type="button" class="btn-secondary" @onclick="Cancel">Cancelar</button>
             </div>
         </EditForm>
@@ -76,10 +57,98 @@
 
 @code {
     private TripFormModel _trip = new();
+    private int _currentStep;
     private bool _saving;
+    private EditContext _editContext = default!;
+    private ValidationMessageStore _validationStore = default!;
+
+    private readonly string[] _stepLabels = ["Destino", "Orçamento", "Detalhes"];
+
+    private static readonly string[][] StepFields =
+    [
+        [nameof(TripFormModel.Destination), nameof(TripFormModel.Country), nameof(TripFormModel.StartDate), nameof(TripFormModel.EndDate)],
+        [nameof(TripFormModel.NumberOfPeople), nameof(TripFormModel.Budget)],
+        [nameof(TripFormModel.Objectives)]
+    ];
+
+    protected override void OnInitialized()
+    {
+        _editContext = new EditContext(_trip);
+        _validationStore = new ValidationMessageStore(_editContext);
+    }
 
     private async Task HandleSubmit()
     {
+        if (_currentStep < 2)
+        {
+            TryAdvanceStep();
+        }
+        else
+        {
+            await SubmitTrip();
+        }
+    }
+
+    private void TryAdvanceStep()
+    {
+        var fields = StepFields[_currentStep];
+        var isValid = true;
+
+        foreach (var field in fields)
+        {
+            var fi = new FieldIdentifier(_trip, field);
+            _validationStore.Clear(fi);
+
+            var propInfo = typeof(TripFormModel).GetProperty(field)!;
+            var value = propInfo.GetValue(_trip);
+            var results = new List<ValidationResult>();
+            var context = new ValidationContext(_trip) { MemberName = field };
+
+            if (!Validator.TryValidateProperty(value, context, results))
+            {
+                isValid = false;
+                foreach (var result in results)
+                {
+                    _validationStore.Add(fi, result.ErrorMessage ?? "Campo inválido");
+                }
+            }
+        }
+
+        _editContext.NotifyValidationStateChanged();
+
+        if (isValid)
+        {
+            _currentStep++;
+        }
+    }
+
+    private void GoToPreviousStep()
+    {
+        _validationStore.Clear();
+        _editContext.NotifyValidationStateChanged();
+        _currentStep--;
+    }
+
+    private async Task SubmitTrip()
+    {
+        var results = new List<ValidationResult>();
+        var isValid = Validator.TryValidateObject(_trip, new ValidationContext(_trip), results, true);
+
+        _validationStore.Clear();
+
+        if (!isValid)
+        {
+            foreach (var result in results)
+            {
+                foreach (var memberName in result.MemberNames)
+                {
+                    _validationStore.Add(new FieldIdentifier(_trip, memberName), result.ErrorMessage ?? "Campo inválido");
+                }
+            }
+            _editContext.NotifyValidationStateChanged();
+            return;
+        }
+
         _saving = true;
 
         var request = new CreateTripRequest(
@@ -102,31 +171,5 @@
     private void Cancel()
     {
         Navigation.NavigateTo("/");
-    }
-
-    private class TripFormModel
-    {
-        [System.ComponentModel.DataAnnotations.Required(ErrorMessage = "Destino é obrigatório")]
-        public string Destination { get; set; } = string.Empty;
-
-        [System.ComponentModel.DataAnnotations.Required(ErrorMessage = "País é obrigatório")]
-        public string Country { get; set; } = string.Empty;
-
-        [System.ComponentModel.DataAnnotations.Required(ErrorMessage = "Data de início é obrigatória")]
-        public DateOnly StartDate { get; set; } = DateOnly.FromDateTime(DateTime.Now);
-
-        [System.ComponentModel.DataAnnotations.Required(ErrorMessage = "Data de término é obrigatória")]
-        public DateOnly EndDate { get; set; } = DateOnly.FromDateTime(DateTime.Now);
-
-        [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue, ErrorMessage = "Deve haver pelo menos 1 pessoa")]
-        public int NumberOfPeople { get; set; } = 1;
-
-        [System.ComponentModel.DataAnnotations.Range(0.01, double.MaxValue, ErrorMessage = "Orçamento deve ser maior que zero")]
-        public decimal Budget { get; set; }
-
-        [System.ComponentModel.DataAnnotations.Required(ErrorMessage = "Objetivo é obrigatório")]
-        public string Objectives { get; set; } = string.Empty;
-
-        public string AdditionalNotes { get; set; } = string.Empty;
     }
 }

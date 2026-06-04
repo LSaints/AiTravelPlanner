@@ -1,0 +1,45 @@
+<div class="step-indicator" role="progressbar" aria-valuenow="@(CurrentStep + 1)" aria-valuemin="1" aria-valuemax="@TotalSteps" aria-label="Progresso do formulário">
+    @for (int i = 0; i < TotalSteps; i++)
+    {
+        <div class="step @GetStepClass(i)">
+            <div class="step-circle">
+                @if (i < CurrentStep)
+                {
+                    <span class="step-check">✓</span>
+                }
+                else
+                {
+                    <span class="step-number">@(i + 1)</span>
+                }
+            </div>
+            <span class="step-label">@StepLabels[i]</span>
+        </div>
+        @if (i < TotalSteps - 1)
+        {
+            <div class="step-connector @GetConnectorClass(i)"></div>
+        }
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int TotalSteps { get; set; }
+
+    [Parameter]
+    public int CurrentStep { get; set; }
+
+    [Parameter]
+    public string[] StepLabels { get; set; } = Array.Empty<string>();
+
+    private string GetStepClass(int index)
+    {
+        if (index < CurrentStep) return "step-completed";
+        if (index == CurrentStep) return "step-active";
+        return "step-pending";
+    }
+
+    private string GetConnectorClass(int index)
+    {
+        return index < CurrentStep ? "connector-completed" : "connector-pending";
+    }
+}

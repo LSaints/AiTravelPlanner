@@ -1,0 +1,20 @@
+<div class="step-budget">
+    <div class="form-row">
+        <div class="form-group">
+            <label for="numberOfPeople">Pessoas</label>
+            <InputNumber id="numberOfPeople" class="form-input" @bind-Value="Model.NumberOfPeople" />
+            <ValidationMessage For="() => Model.NumberOfPeople" />
+        </div>
+        <div class="form-group">
+            <label for="budget">Orçamento</label>
+            <InputNumber id="budget" class="form-input" @bind-Value="Model.Budget" />
+            <ValidationMessage For="() => Model.Budget" />
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    [EditorRequired]
+    public TripFormModel Model { get; set; } = new();
+}

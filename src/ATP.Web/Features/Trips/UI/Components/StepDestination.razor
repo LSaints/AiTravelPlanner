@@ -1,0 +1,32 @@
+<div class="step-destination">
+    <div class="form-group">
+        <label for="destination">Destino</label>
+        <InputText id="destination" class="form-input" @bind-Value="Model.Destination" />
+        <ValidationMessage For="() => Model.Destination" />
+    </div>
+
+    <div class="form-group">
+        <label for="country">País</label>
+        <InputText id="country" class="form-input" @bind-Value="Model.Country" />
+        <ValidationMessage For="() => Model.Country" />
+    </div>
+
+    <div class="form-row">
+        <div class="form-group">
+            <label for="startDate">Data de Início</label>
+            <InputDate id="startDate" class="form-input" @bind-Value="Model.StartDate" />
+            <ValidationMessage For="() => Model.StartDate" />
+        </div>
+        <div class="form-group">
+            <label for="endDate">Data de Término</label>
+            <InputDate id="endDate" class="form-input" @bind-Value="Model.EndDate" />
+            <ValidationMessage For="() => Model.EndDate" />
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    [EditorRequired]
+    public TripFormModel Model { get; set; } = new();
+}
