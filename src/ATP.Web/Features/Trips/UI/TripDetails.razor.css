@@ -540,3 +540,124 @@
         transform: translateY(0) scale(1);
     }
 }
+
+/* ── Responsive: Mobile ── */
+
+@media (max-width: 640px) {
+    .trip-details {
+        padding: 0.75rem;
+    }
+
+    /* Detail header stacks vertically */
+    .detail-header {
+        flex-direction: column;
+        border-radius: 14px;
+    }
+
+    .header-tag {
+        width: 100%;
+        min-width: unset;
+        height: 40px;
+        border-right: none;
+        border-bottom: 3px solid var(--color-primary-hover);
+        border-radius: 11px 11px 0 0;
+    }
+
+    .header-tag::after {
+        display: none;
+    }
+
+    .header-body {
+        padding: 0.85rem 1rem 0.5rem;
+    }
+
+    .header-body h1 {
+        font-size: 1.15rem;
+    }
+
+    .trip-meta {
+        gap: 0.5rem;
+        font-size: 0.8rem;
+    }
+
+    .header-actions {
+        padding: 0 1rem 1rem;
+        width: 100%;
+        gap: 8px;
+    }
+
+    .header-actions .btn-secondary,
+    .header-actions .btn-danger {
+        flex: 1;
+    }
+
+    /* Sections */
+    .content-section {
+        padding: 1rem;
+    }
+
+    .content-section h2 {
+        font-size: 0.95rem;
+    }
+
+    /* Plans section header: stack */
+    .section-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.65rem;
+    }
+
+    .section-header h2 {
+        font-size: 1rem;
+    }
+
+    .section-header .btn-primary {
+        width: 100%;
+    }
+
+    /* Plan cards: stack vertically inside */
+    .plan-body {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.4rem;
+    }
+
+    .plan-info {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    /* Empty / generating state */
+    .plans-empty,
+    .generating {
+        padding: 1.5rem 1rem;
+    }
+
+    .loading {
+        padding: 3rem 1rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .trip-details {
+        padding: 0.5rem;
+    }
+
+    .header-body h1 {
+        font-size: 1rem;
+    }
+
+    .trip-meta {
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+
+    .plan-stub {
+        width: 34px;
+        min-width: 34px;
+    }
+
+    .plan-number {
+        font-size: 0.85rem;
+    }
+}
