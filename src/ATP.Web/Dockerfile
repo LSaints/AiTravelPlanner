@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y nodejs npm
 RUN npm install
 
 # Gera CSS
-RUN npm run build:css
+RUN npm run build
 
 # Publica .NET
 RUN dotnet restore
